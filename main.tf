@@ -5,7 +5,7 @@ terraform {
             version = "4.63.0"
         }
         ssh = {
-            source = "loafoe/ssh"
+            source  = "loafoe/ssh"
             version = "2.6.0"
         }
     }
@@ -317,11 +317,11 @@ resource "aws_security_group" "db" {
     }
 
     egress {
-        description      = "Allow all traffic"
-        from_port        = 0
-        to_port          = 0
-        protocol         = -1
-        cidr_blocks      = ["0.0.0.0/0"]
+        description = "Allow all traffic"
+        from_port   = 0
+        to_port     = 0
+        protocol    = -1
+        cidr_blocks = ["0.0.0.0/0"]
     }
 
     tags = {
@@ -334,10 +334,10 @@ resource "aws_security_group" "db" {
 ###########
 
 resource "aws_instance" "bastion" {
-    ami                         = data.aws_ami.latest.image_id
-    instance_type               = var.bastion_instancetype
-    availability_zone           = data.aws_availability_zones.available.names[0]
-    key_name                    = aws_key_pair.kp[0].key_name
+    ami                 = data.aws_ami.latest.image_id
+    instance_type       = var.bastion_instancetype
+    availability_zone   = data.aws_availability_zones.available.names[0]
+    key_name            = aws_key_pair.kp[0].key_name
 
     network_interface {
         device_index = 0
@@ -350,7 +350,7 @@ resource "aws_instance" "bastion" {
 }
 
 resource "aws_network_interface" "bastion" {
-    subnet_id   = aws_subnet.public[0].id
+    subnet_id       = aws_subnet.public[0].id
     security_groups = [aws_security_group.bastion.id]
 
     tags = {
@@ -465,12 +465,12 @@ resource "ssh_resource" "ssh_agent" {
 ###########
 
 resource "aws_launch_template" "app" {
-    name = "APP-LaunchTemplate"
-    image_id = data.aws_ami.latest.image_id
-    instance_type = var.launchtemplate_instancetype
-    key_name = aws_key_pair.kp[1].key_name
-    vpc_security_group_ids = [aws_security_group.app.id]
-    user_data = filebase64("./script.sh")
+    name                    = "APP-LaunchTemplate"
+    image_id                = data.aws_ami.latest.image_id
+    instance_type           = var.launchtemplate_instancetype
+    key_name                = aws_key_pair.kp[1].key_name
+    vpc_security_group_ids  = [aws_security_group.app.id]
+    user_data               = filebase64("./script.sh")
 
     iam_instance_profile {
         name = var.ec2_iamrole
@@ -498,7 +498,7 @@ resource "aws_autoscaling_group" "app" {
     health_check_grace_period   = 90
     health_check_type           = "ELB"
     target_group_arns           = [aws_lb_target_group.app.arn]
-    wait_for_capacity_timeout = 0
+    wait_for_capacity_timeout   = 0
 
     launch_template {
         id      = aws_launch_template.app.id

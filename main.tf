@@ -273,7 +273,7 @@ resource "aws_security_group" "app" {
     }
 }
 
-resource "aws_security_group_rule" "in_app_http" {
+resource "aws_security_group_rule" "app_in_http" {
     description                 = "Allow HTTP from ALB"
     security_group_id           = aws_security_group.app.id
     type                        = "ingress"
@@ -283,8 +283,8 @@ resource "aws_security_group_rule" "in_app_http" {
     source_security_group_id    = aws_security_group.alb.id
 }
 
-resource "aws_security_group_rule" "in_app_ssh" {
-    description                 = "Allow outbund traffic"
+resource "aws_security_group_rule" "app_in_ssh" {
+    description                 = "Allow SSH Acces from bastion"
     security_group_id           = aws_security_group.app.id
     type                        = "ingress"
     from_port                   = 22
@@ -293,8 +293,8 @@ resource "aws_security_group_rule" "in_app_ssh" {
     source_security_group_id    = aws_security_group.bastion.id
 }
 
-resource "aws_security_group_rule" "out_app_alltrafic" {
-    description                 = "Allow SSH Acces from bastion"
+resource "aws_security_group_rule" "app_out_alltrafic" {
+    description                 = "Allow outbund traffic"
     security_group_id           = aws_security_group.app.id
     type                        = "egress"
     from_port                   = 0
@@ -390,7 +390,7 @@ resource "aws_db_instance" "mysql" {
     skip_final_snapshot     = true
     db_subnet_group_name    = aws_db_subnet_group.db_subnet_group.name
     vpc_security_group_ids  = [aws_security_group.db.id]
-    multi_az                = false
+    multi_az                = true
 }
 
 resource "aws_ssm_parameter" "db_parameters" {

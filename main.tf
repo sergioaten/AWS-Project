@@ -454,7 +454,7 @@ resource "ssh_resource" "ssh_agent" {
     ]
 
     depends_on = [
-        aws_security_group_rule.in_app_ssh,
+        aws_security_group_rule.app_in_ssh,
         aws_key_pair.kp,
         data.aws_instances.app
     ]
@@ -528,5 +528,5 @@ output "rds_endpoint_address" {
 }
 
 output "public_dns_lb" {
-    value = format("%s/cafe",aws_lb.app.dns_name)
+    value = format("%s/cafe",aws_lb.lb.dns_name)
 }

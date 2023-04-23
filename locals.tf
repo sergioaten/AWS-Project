@@ -33,5 +33,5 @@ locals{
     public_azs  = var.subnet.public.azs
     private_azs = var.subnet.private.azs
 
-    myip = chomp(data.http.myip.body)
+    mypublicip = chomp(data.http.mypublicip.body)
 }

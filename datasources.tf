@@ -2,14 +2,6 @@
 # Get EC2 App Instances
 ###########
 
-resource "time_sleep" "sixty_seconds" {
-    create_duration = "60s"
-
-    depends_on = [
-        aws_autoscaling_group.app
-    ]
-}
-
 data "aws_instances" "app" {
     filter {
         name                = "tag:Name"

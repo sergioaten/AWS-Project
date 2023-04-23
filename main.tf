@@ -359,36 +359,6 @@ resource "aws_lb_listener" "http" {
 }
 
 ###########
-# SSH Agent to import DB SQL
-###########
-
-resource "ssh_resource" "ssh_agent" {
-    when = "create"
-
-    bastion_host = aws_eip.bastion.public_ip
-    host         = element(tolist(data.aws_instances.app.private_ips), 0)
-    user         = "ec2-user"
-
-    bastion_private_key = tls_private_key.pk[0].private_key_pem
-    private_key         = tls_private_key.pk[1].private_key_pem
-    
-    timeout     = "15m"
-    retry_delay = "5s"
-
-    commands = [
-        "cd ~",
-        "wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/ILT-TF-200-ACACAD-20-EN/Module-9-Challenge-Lab/CafeDbDump.sql",
-        format("mysql --host=%s --user=admin --password=admin123 cafe_db < CafeDbDump.sql",aws_db_instance.mysql.address)
-    ]
-
-    depends_on = [
-        aws_security_group_rule.app_in_ssh,
-        aws_key_pair.kp,
-        data.aws_instances.app
-    ]
-}
-
-###########
 # Launch Template
 ###########
 
@@ -434,6 +404,14 @@ resource "aws_autoscaling_group" "app" {
     }
 }
 
+resource "time_sleep" "sixty_seconds" {
+    create_duration = "60s"
+
+    depends_on = [
+        aws_autoscaling_group.app
+    ]
+}
+
 # resource "aws_autoscaling_policy" "app" {
 #     name                    = "cpu-scaling-policy"
 #     policy_type             = "TargetTrackingScaling"
@@ -446,3 +424,34 @@ resource "aws_autoscaling_group" "app" {
 #         target_value = 25
 #     }
 # }
+
+
+###########
+# SSH Agent to import DB SQL
+###########
+
+resource "ssh_resource" "ssh_agent" {
+    when = "create"
+
+    bastion_host = aws_eip.bastion.public_ip
+    host         = element(tolist(data.aws_instances.app.private_ips), 0)
+    user         = "ec2-user"
+
+    bastion_private_key = tls_private_key.pk[0].private_key_pem
+    private_key         = tls_private_key.pk[1].private_key_pem
+    
+    timeout     = "15m"
+    retry_delay = "5s"
+
+    commands = [
+        "cd ~",
+        "wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/ILT-TF-200-ACACAD-20-EN/Module-9-Challenge-Lab/CafeDbDump.sql",
+        format("mysql --host=%s --user=admin --password=admin123 cafe_db < CafeDbDump.sql",aws_db_instance.mysql.address)
+    ]
+
+    depends_on = [
+        aws_security_group_rule.app_in_ssh,
+        aws_key_pair.kp,
+        data.aws_instances.app
+    ]
+}

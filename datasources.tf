@@ -25,7 +25,7 @@ data "aws_instances" "app" {
 # Get Public IP
 ###########
 
-data "http" "myip" {
+data "http" "mypublicip" {
     url = "http://ipv4.icanhazip.com"
 }
 

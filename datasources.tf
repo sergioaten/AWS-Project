@@ -3,14 +3,14 @@
 ###########
 
 data "aws_instances" "app" {
-    filter {
-        name                = "tag:Name"
-        values              = ["App*"]
-    }
+  filter {
+    name   = "tag:Name"
+    values = ["App*"]
+  }
 
-    depends_on = [
-        time_sleep.sixty_seconds
-    ]
+  depends_on = [
+    time_sleep.sixty_seconds
+  ]
 }
 
 ###########
@@ -18,7 +18,7 @@ data "aws_instances" "app" {
 ###########
 
 data "http" "mypublicip" {
-    url = "http://ipv4.icanhazip.com"
+  url = "http://ipv4.icanhazip.com"
 }
 
 ###########
@@ -26,7 +26,7 @@ data "http" "mypublicip" {
 ###########
 
 data "aws_availability_zones" "available" {
-    state = "available"
+  state = "available"
 }
 
 ###########
@@ -34,11 +34,11 @@ data "aws_availability_zones" "available" {
 ###########
 
 data "aws_ami" "latest" {
-    most_recent = true
-    owners      = ["amazon"]
+  most_recent = true
+  owners      = ["amazon"]
 
-    filter {
-        name   = "name"
-        values = ["amzn2-ami-kernel-5.10-hvm-2.0.202*-x86_64-gp2"]
-    }
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-kernel-5.10-hvm-2.0.202*-x86_64-gp2"]
+  }
 }

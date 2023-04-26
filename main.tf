@@ -413,16 +413,16 @@ resource "time_sleep" "sixty_seconds" {
 }
 
 # resource "aws_autoscaling_policy" "app" {
-#     name                    = "cpu-scaling-policy"
-#     policy_type             = "TargetTrackingScaling"
-#     autoscaling_group_name  = aws_autoscaling_group.app.name
+#   name                   = "cpu-scaling-policy"
+#   policy_type            = "TargetTrackingScaling"
+#   autoscaling_group_name = aws_autoscaling_group.app.name
 
-#     target_tracking_configuration {
-#         predefined_metric_specification {
-#             predefined_metric_type = "ASGAverageCPUUtilization"
-#         }
-#         target_value = 25
+#   target_tracking_configuration {
+#     predefined_metric_specification {
+#       predefined_metric_type = "ASGAverageCPUUtilization"
 #     }
+#     target_value = 25
+#   }
 # }
 
 

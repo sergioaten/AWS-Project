@@ -412,18 +412,18 @@ resource "time_sleep" "sixty_seconds" {
   ]
 }
 
-# resource "aws_autoscaling_policy" "app" {
-#   name                   = "cpu-scaling-policy"
-#   policy_type            = "TargetTrackingScaling"
-#   autoscaling_group_name = aws_autoscaling_group.app.name
+resource "aws_autoscaling_policy" "app" {
+  name                   = "cpu-scaling-policy"
+  policy_type            = "TargetTrackingScaling"
+  autoscaling_group_name = aws_autoscaling_group.app.name
 
-#   target_tracking_configuration {
-#     predefined_metric_specification {
-#       predefined_metric_type = "ASGAverageCPUUtilization"
-#     }
-#     target_value = 25
-#   }
-# }
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 25
+  }
+}
 
 
 ###########
@@ -446,7 +446,10 @@ resource "ssh_resource" "ssh_agent" {
   commands = [
     "cd ~",
     "wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/ILT-TF-200-ACACAD-20-EN/Module-9-Challenge-Lab/CafeDbDump.sql",
-    format("mysql --host=%s --user=admin --password=admin123 cafe_db < CafeDbDump.sql", aws_db_instance.mysql.address)
+    format("mysql --host=%s --user=admin --password=admin123 cafe_db < CafeDbDump.sql", aws_db_instance.mysql.address),
+    # "sudo amazon-linux-extras install epel -y",
+    # "sudo yum install stress -y",
+    # "sudo stress --cpu 1 --timeout 120s",
   ]
 
   depends_on = [
